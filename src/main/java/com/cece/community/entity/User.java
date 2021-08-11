@@ -7,12 +7,19 @@ public class User {
     private int id;
     private String username;
     private String password;
+    // salt是盐，就是给密码加复杂度的后缀
     private String salt;
+    //用户的email
     private String email;
+    //type = 0 普通用户
     private int type;
+    // status==1，表示已经激活
     private int status;
+    // 用户激活码
     private String activationCode;
+    // 头像图片地址
     private String headerUrl;
+    // 用户创建时间
     private Date createTime;
 
     public int getId() {
