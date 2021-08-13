@@ -4,7 +4,9 @@ import com.cece.community.entity.DiscussPost;
 import com.cece.community.entity.Page;
 import com.cece.community.entity.User;
 import com.cece.community.service.DiscussPostService;
+import com.cece.community.service.LikeService;
 import com.cece.community.service.UserService;
+import com.cece.community.util.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
@@ -25,6 +27,8 @@ public class HomeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LikeService likeService;
 
     @RequestMapping(path="/index", method = RequestMethod.GET)
     public String getIndexPage(Model model, Page page){
@@ -42,9 +46,18 @@ public class HomeController {
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
                 discussPosts.add(map);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
             }
+
         }
         model.addAttribute("discussPosts", discussPosts);
         return "/index";
+    }
+
+//    错误页面
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage() {
+        return "/error/500";
     }
 }

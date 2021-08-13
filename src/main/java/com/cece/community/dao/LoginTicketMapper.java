@@ -4,6 +4,7 @@ import com.cece.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+@Deprecated
 public interface LoginTicketMapper {
 
     // 插入一个login_ticket
