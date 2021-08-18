@@ -1,19 +1,45 @@
 package com.cece.community.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.util.Date;
 
+// shard 分片
+@Document(indexName = "discusspost", shards = 6, replicas = 3)
 public class DiscussPost {
 
+    @Id
     private int id;
+
+    @Field(type = FieldType.Integer)
     private int userId;
+
+    // analyzer="ik_max_word"：存储的解析器，把它分词，使用最大的分词器，分的最细
+    // searchAnalyzer = "ik_smart"： 搜索的时候使用的分词器，非常聪明
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
+
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String content;
+
     //0-普通帖子， 1-置顶
+
+    @Field(type = FieldType.Integer)
     private int type;
+
     // 1表示精华， 2表示拉黑
+    @Field(type = FieldType.Integer)
     private int status;
+
+    @Field(type = FieldType.Date)
     private Date createTime;
+
+    @Field(type = FieldType.Integer)
     private int commentCount;
+    @Field(type = FieldType.Double)
     private double score;
 
     public int getId() {

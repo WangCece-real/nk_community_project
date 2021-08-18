@@ -36,7 +36,7 @@
     </insert>
 
     <select id="selectCountById" resultType="Comment">
-        select <include refid="selectField"></include>
+        select <include refid="selectFields"></include>
         from comment
         where id = #{id}
     </select>

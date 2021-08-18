@@ -7,7 +7,9 @@ import com.cece.community.service.LikeService;
 import com.cece.community.util.CommunityConstant;
 import com.cece.community.util.CommunityUtil;
 import com.cece.community.util.HostHolder;
+import com.cece.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +31,9 @@ public class LikeController implements CommunityConstant {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 处理点赞操作的异步请求
@@ -65,6 +70,12 @@ public class LikeController implements CommunityConstant {
                     // 设置被点赞的用户
                     .setData("postId", postId);
             eventProducer.fireEvent(event);
+        }
+        // 点赞的是帖子才会参与帖子分数计算
+        if(entityType == ENTITY_TYPE_POST) {
+            // 计算帖子分数
+            String redisKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(redisKey, postId);
         }
         return CommunityUtil.getJSONString(0, null, map);
     }
